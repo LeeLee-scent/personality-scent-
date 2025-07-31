@@ -2,30 +2,28 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LeeLee 香氣人格測驗</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeeLee Scent Studio｜香氣人格測驗</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="quiz-container">
-    <h1>LeeLee 香氣人格測驗</h1>
-    <p class="intro-text">在香氣中找尋你的靈魂樣貌，開始探索屬於你的氣味個性吧。</p>
-    <div id="question-container">
-      <h2 id="question-title"></h2>
-      <div id="answer-buttons" class="btn-container"></div>
-    </div>
-    <div id="feedback-container" class="feedback"></div>
-    <button id="next-button" class="nav-button">下一題</button>
-    <div id="result-container">
-      <h2 id="result-title"></h2>
-      <img id="result-image" src="" alt="結果圖像"/>
-      <p id="result-description"></p>
-      <p id="result-analysis" class="analysis"></p>
-      <button id="restart-button" class="nav-button">重新測驗</button>
-    </div>
+  <div id="app">
+    <section id="intro" class="section active">
+      <h1>LeeLee Scent Studio</h1>
+      <p class="scent-quote">「香氣，是靈魂的一種語言。」</p>
+      <p>在六道題目中，選出最貼近你當下直覺的選項，探索你的香氣人格。</p>
+      <button id="start-btn">開始測驗</button>
+    </section>
+
+    <section id="quiz" class="section">
+      <div id="question-container"></div>
+    </section>
+
+    <section id="result" class="section">
+      <div id="result-content"></div>
+      <button id="restart-btn">重新測驗</button>
+    </section>
   </div>
-  <script src="questions.js"></script>
-  <script src="results.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
