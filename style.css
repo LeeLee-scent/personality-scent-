@@ -250,7 +250,16 @@ html,body{
   background-color: #d1b8a5; /* 讓背景顏色變深一點 */
   box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 調整陰影，使其看起來更平 */
 }
+/* 新增：跨頁面淡入淡出效果 */
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
 
+.fade-in {
+  opacity: 1;
+  transition: opacity 0.5s ease-in;
+}
 
 
 
