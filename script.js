@@ -155,11 +155,22 @@ function animateIntroPage() {
 document.addEventListener('DOMContentLoaded', animateIntroPage);
 
 startBtn.addEventListener('click', ()=>{
-  intro.classList.add('hidden');
-  quiz.classList.remove('hidden');
-  current = 0;
-  scores = { woody:0, citrus:0, floral:0, musk:0 };
-  renderQuestion();
+  // 1. 讓 intro 頁面淡出
+  intro.style.transition = 'opacity 0.5s ease-out';
+  intro.style.opacity = 0;
+
+  // 2. 等待淡出動畫結束後，再顯示測驗頁面
+  setTimeout(() => {
+    intro.classList.add('hidden');
+    quiz.classList.remove('hidden');
+    // 讓 quiz 頁面淡入
+    quiz.style.transition = 'opacity 0.5s ease-in';
+    quiz.style.opacity = 1;
+
+    current = 0;
+    scores = { woody:0, citrus:0, floral:0, musk:0 };
+    renderQuestion();
+  }, 500); // 這裡的 500 毫秒與淡出時間相符
 });
 
 function renderQuestion(){
