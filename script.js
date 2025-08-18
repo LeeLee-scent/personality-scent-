@@ -154,12 +154,20 @@ function animateIntroPage() {
 
 document.addEventListener('DOMContentLoaded', animateIntroPage);
 
-startBtn.addEventListener('click', ()=>{
-  intro.classList.add('hidden');
-  quiz.classList.remove('hidden');
-  current = 0;
-  scores = { woody:0, citrus:0, floral:0, musk:0 };
-  renderQuestion();
+startBtn.addEventListener('click', () => {
+  // 1. 讓 intro 區塊淡出
+  intro.classList.add('fade-out');
+
+  // 2. 在淡出完成後，切換到 quiz 區塊並淡入
+  intro.addEventListener('transitionend', () => {
+    intro.classList.add('hidden');
+    quiz.classList.remove('hidden');
+    quiz.classList.add('fade-in');
+    
+    current = 0;
+    scores = { woody:0, citrus:0, floral:0, musk:0 };
+    renderQuestion();
+  }, { once: true });
 });
 
 function renderQuestion(){
