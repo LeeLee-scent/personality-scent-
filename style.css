@@ -242,3 +242,15 @@ html,body{
   display: flex;
   justify-content: center;
 }
+/* 新增：按鈕點擊效果 */
+.btn:active,
+.answer-btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+
+
+
+
+
