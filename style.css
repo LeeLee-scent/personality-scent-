@@ -22,8 +22,8 @@ html,body{
   padding:20px 12px;
 }
 .logo{
-  max-width:1080px;
-  width:200%;
+  max-width:720px;
+  width:100%;
   height:auto;
 }
 .container{max-width:720px;margin:0 auto;padding:16px}
@@ -55,7 +55,7 @@ html,body{
   align-items: center;
   text-align: center;
   /* 關鍵修正：使用負值 margin 讓卡片上移，與 Logo 視覺對齊 */
-  margin-top: -40px;
+  margin-top: -20px;
 }
 .intro-title-container {
   display: flex;
