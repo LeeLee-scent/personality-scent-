@@ -23,7 +23,7 @@ html,body{
 }
 .logo{
   max-width:720px;
-  width:100%;
+  width:120%;
   height:auto;
 }
 .container{max-width:720px;margin:0 auto;padding:16px}
