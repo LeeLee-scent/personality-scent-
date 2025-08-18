@@ -246,7 +246,9 @@ html,body{
 .btn:active,
 .answer-btn:active {
   transform: translateY(1px);
-  box-shadow: none;
+  /* 新增或修改: 在按下時調整背景色和陰影 */
+  background-color: #d1b8a5; /* 讓背景顏色變深一點 */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 調整陰影，使其看起來更平 */
 }
 
 
