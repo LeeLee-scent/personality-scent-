@@ -155,15 +155,21 @@ function animateIntroPage() {
 document.addEventListener('DOMContentLoaded', animateIntroPage);
 
 startBtn.addEventListener('click', () => {
-  // 1. 讓 intro 區塊淡出
-  intro.classList.add('fade-out');
+  // 讓 quiz 區塊先顯示出來，但設定為透明
+  quiz.classList.remove('hidden');
+  quiz.style.opacity = 0;
+  
+  // 讓 intro 區塊開始淡出
+  intro.style.transition = 'opacity 0.5s ease-out';
+  intro.style.opacity = 0;
 
-  // 2. 在淡出完成後，切換到 quiz 區塊並淡入
+  // 在淡出動畫結束後，將 intro 隱藏，並讓 quiz 淡入
   intro.addEventListener('transitionend', () => {
     intro.classList.add('hidden');
-    quiz.classList.remove('hidden');
-    quiz.classList.add('fade-in');
     
+    quiz.style.transition = 'opacity 0.5s ease-in';
+    quiz.style.opacity = 1;
+
     current = 0;
     scores = { woody:0, citrus:0, floral:0, musk:0 };
     renderQuestion();
