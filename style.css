@@ -22,8 +22,8 @@ html,body{
   padding:20px 12px;
 }
 .logo{
-  max-width:1080px;
-  width:200%;
+  max-width:720px;
+  width:100%;
   height:auto;
 }
 .container{max-width:720px;margin:0 auto;padding:16px}
@@ -34,11 +34,9 @@ html,body{
   margin-bottom:18px;
   box-shadow:0 8px 20px rgba(75,63,54,0.08);
 }
-/* 這裡進行最終修正：將 site-header 內的 card 背景、padding 和 box-shadow 全部移除 */
 .site-header .card {
-  background: none; /* 移除背景顏色 */
-  padding: 0; /* 移除內邊距 */
-  box-shadow: none; /* 移除陰影 */
+  padding: 0;
+  box-shadow: none;
   margin-bottom: 0;
 }
 .site-header .logo {
@@ -54,8 +52,6 @@ html,body{
   flex-direction: column;
   align-items: center;
   text-align: center;
-  /* 關鍵修正：使用負值 margin 讓卡片上移，與 Logo 視覺對齊 */
-  margin-top: -40px;
 }
 .intro-title-container {
   display: flex;
@@ -82,13 +78,14 @@ html,body{
 .intro-text-wrapper {
   opacity: 0;
 }
+/* 修正 intro 內文字行高 */
 .lead{
   color:var(--cream);
   margin-bottom:6px;
   text-align:center !important;
   white-space:pre-wrap !important;
   font-size:1.2em;
-  line-height: 1.4;
+  line-height: 1.6; /* 調整行高 */
   letter-spacing: 0.5px;
 }
 #intro #startBtn {
@@ -220,18 +217,9 @@ html,body{
   padding: 20px;
   border: 1px solid #e9e2db;
   color: var(--muted);
-  line-height: 1.6;
+  line-height: 1.6; /* 調整行高 */
   text-align: left;
   margin-top: 16px;
-  /* 新增：文字樣式優化 */
-.result-desc-text strong {
-  font-weight: 700;
-  color: var(--text);
-}
-.result-desc-text em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--muted);
 }
 .result-actions {
   display: flex;
@@ -251,14 +239,3 @@ html,body{
   display: flex;
   justify-content: center;
 }
-/* 新增：按鈕點擊效果 */
-.btn:active,
-.answer-btn:active {
-  transform: translateY(1px);
-  /* 新增或修改: 在按下時調整背景色和陰影 */
-  background-color: #d1b8a5; /* 讓背景顏色變深一點 */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 調整陰影，使其看起來更平 */
-}
-
-
-
