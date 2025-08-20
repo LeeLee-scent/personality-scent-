@@ -223,6 +223,15 @@ html,body{
   line-height: 1.6;
   text-align: left;
   margin-top: 16px;
+  /* 新增：文字樣式優化 */
+.result-desc-text strong {
+  font-weight: 700;
+  color: var(--text);
+}
+.result-desc-text em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--muted);
 }
 .result-actions {
   display: flex;
