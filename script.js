@@ -142,12 +142,12 @@ async function animateIntroPage() {
   logo.style.animation = 'fadeInUp 2s forwards';
   await delay(1500);
 
+  introTitleLeft.style.opacity = 1;
   await typeText(introTitleLeft, '測一測', 100);
-  await delay(500);
-
+  
   introTitleRight.style.opacity = 1;
   await typeText(introTitleRight, '屬於你的風格香', 100);
-  await delay(500);
+  await delay(1000);
 
   introTextWrapper.style.animation = 'fadeIn 2s forwards';
   await delay(1500);
@@ -160,7 +160,17 @@ async function animateQuizQuestion(text) {
 }
 
 async function animateResultPage(resultData) {
+  // Reset previous result animations
+  resultSubtitle.style.animation = 'none';
+  resultTitle.style.animation = 'none';
+  resultImageContainer.style.animation = 'none';
+  resultDesc.style.animation = 'none';
+
+  // Trigger animations in sequence
+  await delay(500);
+
   // 1. Fade in "你的風格香是"
+  resultSubtitle.textContent = "你的風格香是";
   resultSubtitle.style.animation = 'fadeIn 2s forwards';
   await delay(1500);
 
@@ -199,7 +209,7 @@ function renderQuestion() {
   progressText.textContent = `第 ${current + 1} 題 / ${total} 題`;
   answersDiv.innerHTML = '';
   currentSelection = null;
-  
+
   q.answers.forEach((a) => {
     const btn = document.createElement('button');
     btn.className = 'answer-btn';
@@ -209,20 +219,20 @@ function renderQuestion() {
     answersDiv.appendChild(btn);
   });
   nextBtn.style.display = 'none';
-  
+
   animateQuizQuestion(q.question);
 }
 
 function selectAnswer(selectedBtn) {
   const selectedType = selectedBtn.dataset.type;
-  
+
   answersDiv.querySelectorAll('button').forEach(b => {
     b.classList.remove('selected');
   });
-  
+
   selectedBtn.classList.add('selected');
   currentSelection = selectedType;
-  
+
   if (currentSelection) {
     nextBtn.style.display = 'inline-block';
   }
@@ -243,7 +253,7 @@ nextBtn.addEventListener('click', () => {
 function showResult() {
   quiz.classList.add('hidden');
   resultSection.classList.remove('hidden');
-  
+
   let highest = 'woody';
   let max = -1;
   for (const k in scores) {
@@ -259,7 +269,7 @@ function showResult() {
 restartBtn.addEventListener('click', () => {
   resultSection.classList.add('hidden');
   intro.classList.remove('hidden');
-  
+
   // Reset all animations and states
   resultSubtitle.style.animation = '';
   resultTitle.style.animation = '';
@@ -270,7 +280,7 @@ restartBtn.addEventListener('click', () => {
   introTitleRight.textContent = '';
   introTextWrapper.style.animation = '';
   startBtn.style.animation = '';
-  
+
   animateIntroPage();
 });
 
@@ -278,7 +288,7 @@ shareBtn.addEventListener('click', () => {
   const highest = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
   const resultText = results[highest].title;
   const shareText = `我的香氣人格是【${resultText}】！快來測測看你是哪一種吧！\n${window.location.href}`;
-  
+
   if (navigator.share) {
     navigator.share({
       title: '香氣人格測驗',
