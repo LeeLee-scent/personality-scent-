@@ -1,4 +1,4 @@
-// script.js - 香氣人格測驗 (簡化結果頁動畫)
+// script.js - 香氣人格測驗 (VOGUE風格簡化版)
 const questions = [
   {
     question: "Q1. 清晨起床的你，最需要什麼來開啟新的一天？",
@@ -125,8 +125,6 @@ const introTitleRight = document.querySelector('.intro-title-right');
 const introTextWrapper = document.querySelector('.intro-text-wrapper');
 
 // Utility Functions
-const delay = ms => new Promise(res => setTimeout(res, ms));
-
 function typeText(element, text, speed = 50, callback) {
   element.textContent = '';
   element.classList.add('typewriter');
@@ -146,20 +144,26 @@ function typeText(element, text, speed = 50, callback) {
 
 // Function to handle the intro page animation sequence
 function animateIntroPage() {
+  // Use a simpler approach to chain animations
+  // 1. Logo fades in
   logo.style.animation = 'fadeInUp 2s forwards';
 
-  logo.addEventListener('animationend', () => {
+  setTimeout(() => {
+    // 2. "測一測" types out
     introTitleLeft.style.opacity = '1';
     typeText(introTitleLeft, '測一測', 100, () => {
+      // 3. "屬於你的風格香" types out
       introTitleRight.style.opacity = '1';
       typeText(introTitleRight, '屬於你的風格香', 100, () => {
+        // 4. Intro text fades in
         introTextWrapper.style.animation = 'fadeIn 2s forwards';
-        introTextWrapper.addEventListener('animationend', () => {
+        setTimeout(() => {
+          // 5. Start button slides up
           startBtn.style.animation = 'fadeInUp 2s forwards';
-        }, { once: true });
+        }, 1500); // Wait for intro text animation
       });
     });
-  }, { once: true });
+  }, 1500); // Wait for logo animation
 }
 
 // Function to animate the quiz question title
@@ -169,18 +173,12 @@ function animateQuizQuestion(text) {
 
 // Simplified function to animate the result page
 function animateResultPage(resultData) {
-  // Reset animations for a clean start
-  resultSubtitle.style.animation = 'none';
-  resultTitle.style.animation = 'none';
-  resultImageContainer.style.animation = 'none';
-  resultDesc.style.animation = 'none';
-  
-  // Phase 1: Show header and image
+  // Phase 1: Show header and image with a smooth fade in
   resultSubtitle.textContent = "你的風格香是";
   resultTitle.textContent = resultData.title;
   resultImage.src = resultData.image;
 
-  // Apply fadeIn animations to the first group of elements
+  // Fade in the first group of elements
   resultSubtitle.style.animation = 'fadeIn 2s forwards';
   resultTitle.style.animation = 'fadeIn 2s forwards';
   resultImageContainer.style.animation = 'fadeIn 2s forwards';
@@ -190,7 +188,7 @@ function animateResultPage(resultData) {
     resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
     resultDesc.innerHTML = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
     resultDesc.style.animation = 'fadeIn 2s forwards';
-  }, 1000); // 1秒後顯示描述
+  }, 1500); // Delay for a smoother transition after the first phase
 }
 
 // Event Listeners
@@ -272,15 +270,26 @@ restartBtn.addEventListener('click', () => {
   intro.classList.remove('hidden');
   
   // Reset all animations for a clean start
+  resultSubtitle.style.animation = 'none';
+  resultTitle.style.animation = 'none';
+  resultImageContainer.style.animation = 'none';
+  resultDesc.style.animation = 'none';
+  logo.style.animation = 'none';
+  introTitleLeft.textContent = '';
+  introTitleRight.textContent = '';
+  introTextWrapper.style.animation = 'none';
+  startBtn.style.animation = 'none';
+  
+  // To re-trigger animation, clear the style property
   resultSubtitle.style.animation = '';
   resultTitle.style.animation = '';
   resultImageContainer.style.animation = '';
   resultDesc.style.animation = '';
   logo.style.animation = '';
-  introTitleLeft.textContent = '';
-  introTitleRight.textContent = '';
-  introTextWrapper.style.animation = '';
-  startBtn.style.animation = '';
+  introTitleLeft.style.opacity = '0';
+  introTitleRight.style.opacity = '0';
+  introTextWrapper.style.opacity = '0';
+  startBtn.style.opacity = '0';
   
   animateIntroPage();
 });
