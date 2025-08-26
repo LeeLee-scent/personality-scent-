@@ -1,4 +1,4 @@
-// script.js - 香氣人格測驗 (VOGUE風格簡化版)
+// script.js - 香氣人格測驗 (終極優化版)
 const questions = [
   {
     question: "Q1. 清晨起床的你，最需要什麼來開啟新的一天？",
@@ -144,26 +144,20 @@ function typeText(element, text, speed = 50, callback) {
 
 // Function to handle the intro page animation sequence
 function animateIntroPage() {
-  // Use a simpler approach to chain animations
-  // 1. Logo fades in
   logo.style.animation = 'fadeInUp 2s forwards';
 
   setTimeout(() => {
-    // 2. "測一測" types out
     introTitleLeft.style.opacity = '1';
     typeText(introTitleLeft, '測一測', 100, () => {
-      // 3. "屬於你的風格香" types out
       introTitleRight.style.opacity = '1';
       typeText(introTitleRight, '屬於你的風格香', 100, () => {
-        // 4. Intro text fades in
         introTextWrapper.style.animation = 'fadeIn 2s forwards';
         setTimeout(() => {
-          // 5. Start button slides up
           startBtn.style.animation = 'fadeInUp 2s forwards';
-        }, 1500); // Wait for intro text animation
+        }, 1500);
       });
     });
-  }, 1500); // Wait for logo animation
+  }, 1500);
 }
 
 // Function to animate the quiz question title
@@ -173,22 +167,35 @@ function animateQuizQuestion(text) {
 
 // Simplified function to animate the result page
 function animateResultPage(resultData) {
-  // Phase 1: Show header and image with a smooth fade in
+  // Reset animations for a clean start
+  resultSubtitle.style.animation = 'none';
+  resultTitle.style.animation = 'none';
+  resultImageContainer.style.animation = 'none';
+  resultDesc.style.animation = 'none';
+  resultHashtags.style.animation = 'none';
+  
+  // Set result data
   resultSubtitle.textContent = "你的風格香是";
   resultTitle.textContent = resultData.title;
   resultImage.src = resultData.image;
+  resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
+  resultDesc.innerHTML = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
+  
+  // Animate elements with a staggered delay
+  const elementsToAnimate = [
+    resultSubtitle,
+    resultTitle,
+    resultImageContainer,
+    resultDesc
+  ];
+  
+  elementsToAnimate.forEach((element, index) => {
+    setTimeout(() => {
+      element.style.animation = 'fadeIn 2s forwards';
+    }, index * 200); // Staggered delay of 200ms
+  });
 
-  // Fade in the first group of elements
-  resultSubtitle.style.animation = 'fadeIn 2s forwards';
-  resultTitle.style.animation = 'fadeIn 2s forwards';
-  resultImageContainer.style.animation = 'fadeIn 2s forwards';
-
-  // Phase 2: Wait and then show description
-  setTimeout(() => {
-    resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
-    resultDesc.innerHTML = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
-    resultDesc.style.animation = 'fadeIn 2s forwards';
-  }, 1500); // Delay for a smoother transition after the first phase
+  // Since hashtags are part of the description card, they will fade in with it.
 }
 
 // Event Listeners
