@@ -93,7 +93,7 @@ html,body{
 }
 #intro #startBtn {
   display: block;
-  margin: 0 auto;
+  margin: 20px auto 0; /* 調整為 20px，增加與上方文字的間距 */
   opacity: 0;
 }
 .btn{
@@ -255,4 +255,5 @@ html,body{
 #quiz .nav {
   display: flex;
   justify-content: center;
+  margin-top: 24px; /* 增加與上方問題區塊的間距 */
 }
