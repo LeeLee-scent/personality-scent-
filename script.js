@@ -123,7 +123,7 @@ const introTitleLeft = document.querySelector('.intro-title-left');
 const introTitleRight = document.querySelector('.intro-title-right');
 const introTextWrapper = document.querySelector('.intro-text-wrapper');
 
-// Function for typewriter effect
+// Function for typewriter effect (reusable)
 function typeText(element, text, speed = 50, callback){
   element.textContent = '';
   let i = 0;
@@ -142,30 +142,37 @@ function typeText(element, text, speed = 50, callback){
 // Function to handle the intro page animation sequence
 function animateIntroPage() {
   // 1. Logo fades in
-  logo.classList.add('animate-slide-up');
+  logo.style.animation = 'fadeInUp 1.5s forwards'; // Slower speed
 
-  // After logo animation ends, start the next sequence
   logo.addEventListener('animationend', () => {
-    // 2. The phrase "測一測" appears
-    introTitleLeft.classList.add('animate-fade-in');
+    // 2. The phrase "測一測" fades in
+    introTitleLeft.style.animation = 'fadeIn 1.5s forwards'; // Slower speed
 
-    // 3. The phrase "屬於你的風格香" types out
     introTitleLeft.addEventListener('animationend', () => {
-        introTitleRight.classList.add('typewriter');
-        typeText(introTitleRight, '屬於你的風格香', 100, () => {
-            introTitleRight.classList.remove('typewriter');
-            
-            // 4. Intro text fades in
-            introTextWrapper.classList.add('animate-fade-in');
+      // 3. The phrase "屬於你的風格香" types out
+      introTitleRight.classList.add('typewriter');
+      typeText(introTitleRight, '屬於你的風格香', 100, () => {
+        introTitleRight.classList.remove('typewriter');
+        
+        // 4. Intro text fades in
+        introTextWrapper.style.animation = 'fadeIn 1.5s forwards'; // Slower speed
 
-            // 5. Start button slides up
-            startBtn.classList.add('animate-slide-up');
-        });
+        // 5. Start button slides up
+        startBtn.style.animation = 'fadeInUp 1.5s forwards'; // Slower speed
+      });
     }, { once: true });
   }, { once: true });
 }
 
-// Start the intro animation when the page loads
+// Function to animate the quiz question title
+function animateQuizQuestion(text) {
+  questionTitle.classList.add('typewriter');
+  typeText(questionTitle, text, 50, () => {
+    questionTitle.classList.remove('typewriter');
+  });
+}
+
+// Event Listeners
 document.addEventListener('DOMContentLoaded', animateIntroPage);
 
 startBtn.addEventListener('click', ()=>{
@@ -192,7 +199,7 @@ function renderQuestion(){
     answersDiv.appendChild(btn);
   });
   nextBtn.style.display = 'none';
-  questionTitle.textContent = q.question;
+  animateQuizQuestion(q.question); // Call new function to animate the question title
 }
 
 function selectAnswer(selectedBtn){
