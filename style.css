@@ -49,12 +49,12 @@ html,body{
   opacity: 0;
 }
 
+/* Intro 頁面標題與排版 */
 #intro {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  /* 關鍵修正：使用負值 margin 讓卡片上移，與 Logo 視覺對齊 */
   margin-top: -30px;
 }
 .intro-title-container {
@@ -62,7 +62,6 @@ html,body{
   align-items: center;
   justify-content: center;
   margin-bottom: 24px;
-  opacity: 0;
 }
 .intro-title-left {
   font-family: "Noto Serif TC", serif;
@@ -72,12 +71,16 @@ html,body{
   margin-right: 12px;
   border-right: 2px solid var(--text);
   line-height: 1;
+  opacity: 0;
+  /* 打字機效果的游標 */
+  animation: typeCaret 1s steps(1) infinite;
 }
 .intro-title-right {
   font-family: "Noto Serif TC", serif;
   font-weight: 400;
   font-size: 2em;
   line-height: 1;
+  opacity: 0;
 }
 .intro-text-wrapper {
   opacity: 0;
@@ -93,7 +96,16 @@ html,body{
 }
 #intro #startBtn {
   display: block;
-  margin: 20px auto 0; /* 調整為 20px，增加與上方文字的間距 */
+  margin: 20px auto 0;
+  opacity: 0;
+}
+
+/* 確保 Logo 預設透明 */
+.site-header .logo {
+  max-width: 400px;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
   opacity: 0;
 }
 .btn{
@@ -167,8 +179,17 @@ html,body{
   from { opacity: 0; }
   to { opacity: 1; }
 }
+/* 新增打字機游標動畫 */
+@keyframes typeCaret {
+  50% { border-color: transparent; }
+}
+
+/* 新增用於控制動畫的 Class */
 .animate-fade-in {
   animation: fadeIn 1s forwards;
+}
+.animate-slide-up {
+  animation: fadeInUp 1s forwards;
 }
 
 /* 全新結果頁面樣式 */
