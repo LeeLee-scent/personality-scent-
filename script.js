@@ -85,4 +85,189 @@ const results = {
     analysis: "你的選擇傾向於感性、浪漫且溫馨的體驗。你相信美好的事物能滋養心靈，並享受生活中的儀式感。花香調，如<strong>玫瑰</strong>、<strong>茉莉</strong>、<strong>橙花</strong>，能凸顯你柔美且充滿內在力量的特質。這些香氣不僅增添你的個人魅力，更能傳達出你溫柔而堅定的性格，讓人們因為你的存在而感到美好。"
   },
   musk: {
-    title: "
+    title: "麝香神秘型",
+    image: "images/result_musk.jpg",
+    hashtags: ["#高雅內斂", "#神秘直覺", "#獨立思考"],
+    description: "你是一位安靜、內斂卻充滿深度的人。你的氣場獨特而高雅，不需言語便能傳達出強烈的個人風格。你擁有敏銳的直覺和獨立的思考能力，不隨波逐流，總是保持著一份神秘感，讓人們忍不住想更深入地了解你。你重視個人空間，從獨處中汲取靈感與力量，不輕易表達但內心世界豐富。",
+    analysis: "你的選擇反映出你獨特的審美觀和對純粹的追求。你重視個人空間，從獨處中汲取靈感與力量。麝香，結合<strong>琥珀</strong>、<strong>廣藿香</strong>等後調，能完美烘托你乾淨俐落、高雅內斂的特質。這些香氣低調而持久，像你的個性一樣，雖然不喧鬧，卻能留下深刻且令人難忘的印記。"
+  }
+};
+
+// State
+let current = 0;
+let scores = { woody:0, citrus:0, floral:0, musk:0 };
+const total = questions.length;
+let currentSelection = null;
+
+// Elements
+const intro = document.getElementById('intro');
+const startBtn = document.getElementById('startBtn');
+const quiz = document.getElementById('quiz');
+const questionTitle = document.getElementById('questionTitle');
+const answersDiv = document.getElementById('answers');
+const questionImage = document.getElementById('questionImage');
+const progressText = document.getElementById('progressText');
+const nextBtn = document.getElementById('nextBtn');
+const resultSection = document.getElementById('result');
+const resultTitle = document.getElementById('resultTitle');
+const resultImage = document.getElementById('resultImage');
+const resultDesc = document.getElementById('resultDesc');
+const resultHashtags = document.getElementById('resultHashtags');
+const restartBtn = document.getElementById('restartBtn');
+const shareBtn = document.getElementById('shareBtn');
+
+// Intro Page Elements
+const logo = document.querySelector('.site-header .logo');
+const introTitleContainer = document.querySelector('.intro-title-container');
+const introTitleLeft = document.querySelector('.intro-title-left');
+const introTitleRight = document.querySelector('.intro-title-right');
+const introTextWrapper = document.querySelector('.intro-text-wrapper');
+
+// Function for typewriter effect
+function typeText(element, text, speed = 50, callback){
+  element.textContent = '';
+  let i = 0;
+  function typing(){
+    if(i < text.length){
+      element.textContent += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
+    } else if(callback){
+      callback();
+    }
+  }
+  typing();
+}
+
+// Function to handle the intro page animation sequence
+function animateIntroPage() {
+  // 1. Logo fades in
+  logo.classList.add('animate-slide-up');
+
+  // After logo animation ends, start the next sequence
+  logo.addEventListener('animationend', () => {
+    // 2. The phrase "測一測" appears
+    introTitleLeft.classList.add('animate-fade-in');
+
+    // 3. The phrase "屬於你的風格香" types out
+    introTitleLeft.addEventListener('animationend', () => {
+        introTitleRight.classList.add('typewriter');
+        typeText(introTitleRight, '屬於你的風格香', 100, () => {
+            introTitleRight.classList.remove('typewriter');
+            
+            // 4. Intro text fades in
+            introTextWrapper.classList.add('animate-fade-in');
+
+            // 5. Start button slides up
+            startBtn.classList.add('animate-slide-up');
+        });
+    }, { once: true });
+  }, { once: true });
+}
+
+// Start the intro animation when the page loads
+document.addEventListener('DOMContentLoaded', animateIntroPage);
+
+startBtn.addEventListener('click', ()=>{
+  intro.classList.add('hidden');
+  quiz.classList.remove('hidden');
+  current = 0;
+  scores = { woody:0, citrus:0, floral:0, musk:0 };
+  renderQuestion();
+});
+
+function renderQuestion(){
+  const q = questions[current];
+  questionImage.src = q.image;
+  progressText.textContent = `第 ${current+1} 題 / ${total} 題`;
+  answersDiv.innerHTML = '';
+  currentSelection = null;
+  q.answers.forEach((a) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = a.text;
+    btn.style.color = "#3b2f2f";
+    btn.dataset.type = a.type;
+    btn.addEventListener('click', ()=> selectAnswer(btn));
+    answersDiv.appendChild(btn);
+  });
+  nextBtn.style.display = 'none';
+  questionTitle.textContent = q.question;
+}
+
+function selectAnswer(selectedBtn){
+  const selectedType = selectedBtn.dataset.type;
+
+  answersDiv.querySelectorAll('button').forEach(b => {
+    b.classList.remove('selected');
+  });
+
+  selectedBtn.classList.add('selected');
+  currentSelection = selectedType;
+
+  if(currentSelection && current < total-1){
+    nextBtn.style.display = 'inline-block';
+  } else if (currentSelection && current === total-1) {
+    nextBtn.style.display = 'inline-block';
+  } else {
+    nextBtn.style.display = 'none';
+  }
+}
+
+nextBtn.addEventListener('click', ()=>{
+  if (currentSelection) {
+    scores[currentSelection]++;
+    current++;
+    if(current < total) {
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+});
+
+function showResult(){
+  quiz.classList.add('hidden');
+  resultSection.classList.remove('hidden');
+  let highest = 'woody';
+  let max = -1;
+  for(const k in scores){
+    if(scores[k] > max){ max = scores[k]; highest = k; }
+  }
+  const r = results[highest];
+  
+  // 更新結果頁面
+  resultTitle.textContent = r.title;
+  resultImage.src = r.image;
+  
+  // 顯示標籤 (新方式)
+  resultHashtags.innerHTML = r.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
+  
+  // 結合描述和分析 (新方式)
+  resultDesc.innerHTML = `<p>${r.description}</p><div class="result-separator"></div><p>${r.analysis}</p>`;
+}
+
+restartBtn.addEventListener('click', ()=>{
+  resultSection.classList.add('hidden');
+  intro.classList.remove('hidden');
+});
+
+shareBtn.addEventListener('click', ()=>{
+  const highest = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+  const resultText = results[highest].title;
+  const shareText = `我的香氣人格是【${resultText}】！快來測測看你是哪一種吧！\n${window.location.href}`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: '香氣人格測驗',
+      text: shareText,
+      url: window.location.href
+    }).catch((error) => console.log('分享失敗', error));
+  } else {
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert('結果已複製到剪貼簿，可以去貼給朋友囉！');
+    }).catch((err) => {
+      console.error('無法複製到剪貼簿', err);
+    });
+  }
+});
