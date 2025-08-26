@@ -1,4 +1,4 @@
-// script.js - 香氣人格測驗
+// script.js - 香氣人格測驗 (簡化結果頁動畫)
 const questions = [
   {
     question: "Q1. 清晨起床的你，最需要什麼來開啟新的一天？",
@@ -124,19 +124,21 @@ const introTitleLeft = document.querySelector('.intro-title-left');
 const introTitleRight = document.querySelector('.intro-title-right');
 const introTextWrapper = document.querySelector('.intro-text-wrapper');
 
-// Function for typewriter effect (reusable)
-function typeText(element, text, speed = 50, callback){
+// Utility Functions
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+function typeText(element, text, speed = 50, callback) {
   element.textContent = '';
   element.classList.add('typewriter');
   let i = 0;
-  function typing(){
-    if(i < text.length){
+  function typing() {
+    if (i < text.length) {
       element.textContent += text.charAt(i);
       i++;
       setTimeout(typing, speed);
     } else {
       element.classList.remove('typewriter');
-      if(callback) callback();
+      if (callback) callback();
     }
   }
   typing();
@@ -144,20 +146,15 @@ function typeText(element, text, speed = 50, callback){
 
 // Function to handle the intro page animation sequence
 function animateIntroPage() {
-  // 1. Logo fades in
   logo.style.animation = 'fadeInUp 2s forwards';
 
   logo.addEventListener('animationend', () => {
-    // 2. "測一測" types out
     introTitleLeft.style.opacity = '1';
     typeText(introTitleLeft, '測一測', 100, () => {
-      // 3. "屬於你的風格香" types out
       introTitleRight.style.opacity = '1';
       typeText(introTitleRight, '屬於你的風格香', 100, () => {
-        // 4. Intro text fades in
         introTextWrapper.style.animation = 'fadeIn 2s forwards';
         introTextWrapper.addEventListener('animationend', () => {
-          // 5. Start button slides up
           startBtn.style.animation = 'fadeInUp 2s forwards';
         }, { once: true });
       });
@@ -170,36 +167,30 @@ function animateQuizQuestion(text) {
   typeText(questionTitle, text, 50);
 }
 
-// Function to animate the result page
+// Simplified function to animate the result page
 function animateResultPage(resultData) {
-  // Reset previous animations
-  resultSubtitle.style.animation = '';
-  resultTitle.style.animation = '';
-  resultImageContainer.style.animation = '';
-  resultDesc.style.animation = '';
-
-  // 1. "你的風格香是" fades in
+  // Reset animations for a clean start
+  resultSubtitle.style.animation = 'none';
+  resultTitle.style.animation = 'none';
+  resultImageContainer.style.animation = 'none';
+  resultDesc.style.animation = 'none';
+  
+  // Phase 1: Show header and image
   resultSubtitle.textContent = "你的風格香是";
+  resultTitle.textContent = resultData.title;
+  resultImage.src = resultData.image;
+
+  // Apply fadeIn animations to the first group of elements
   resultSubtitle.style.animation = 'fadeIn 2s forwards';
+  resultTitle.style.animation = 'fadeIn 2s forwards';
+  resultImageContainer.style.animation = 'fadeIn 2s forwards';
 
-  resultSubtitle.addEventListener('animationend', () => {
-    // 2. Result title fades in
-    resultTitle.textContent = resultData.title;
-    resultTitle.style.animation = 'fadeIn 2s forwards';
-
-    resultTitle.addEventListener('animationend', () => {
-      // 3. Image flips
-      resultImage.src = resultData.image;
-      resultImageContainer.style.animation = 'flipImage 2s ease-in-out forwards';
-      
-      resultImageContainer.addEventListener('animationend', () => {
-        // 4. Description and hashtags fade in
-        resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
-        resultDesc.innerHTML = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
-        resultDesc.style.animation = 'fadeIn 2s forwards';
-      }, { once: true });
-    }, { once: true });
-  }, { once: true });
+  // Phase 2: Wait and then show description
+  setTimeout(() => {
+    resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
+    resultDesc.innerHTML = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
+    resultDesc.style.animation = 'fadeIn 2s forwards';
+  }, 1000); // 1秒後顯示描述
 }
 
 // Event Listeners
