@@ -1,4 +1,4 @@
-// script.js - 香氣人格測驗 (Single Page, 6 questions + 打字效果 + 深色字體)
+// script.js - 香氣人格測驗
 const questions = [
   {
     question: "Q1. 清晨起床的你，最需要什麼來開啟新的一天？",
@@ -124,82 +124,92 @@ const introTitleLeft = document.querySelector('.intro-title-left');
 const introTitleRight = document.querySelector('.intro-title-right');
 const introTextWrapper = document.querySelector('.intro-text-wrapper');
 
-// Utility Functions
-const delay = ms => new Promise(res => setTimeout(res, ms));
-
-async function typeText(element, text, speed = 50) {
+// Function for typewriter effect (reusable)
+function typeText(element, text, speed = 50, callback){
   element.textContent = '';
   element.classList.add('typewriter');
-  for (let i = 0; i < text.length; i++) {
-    element.textContent += text.charAt(i);
-    await delay(speed);
+  let i = 0;
+  function typing(){
+    if(i < text.length){
+      element.textContent += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
+    } else {
+      element.classList.remove('typewriter');
+      if(callback) callback();
+    }
   }
-  element.classList.remove('typewriter');
+  typing();
 }
 
-// Animation Functions
-async function animateIntroPage() {
+// Function to handle the intro page animation sequence
+function animateIntroPage() {
+  // 1. Logo fades in
   logo.style.animation = 'fadeInUp 2s forwards';
-  await delay(1500);
 
-  introTitleLeft.style.opacity = 1;
-  await typeText(introTitleLeft, '測一測', 100);
-  
-  introTitleRight.style.opacity = 1;
-  await typeText(introTitleRight, '屬於你的風格香', 100);
-  await delay(1000);
-
-  introTextWrapper.style.animation = 'fadeIn 2s forwards';
-  await delay(1500);
-
-  startBtn.style.animation = 'fadeInUp 2s forwards';
+  logo.addEventListener('animationend', () => {
+    // 2. "測一測" types out
+    introTitleLeft.style.opacity = '1';
+    typeText(introTitleLeft, '測一測', 100, () => {
+      // 3. "屬於你的風格香" types out
+      introTitleRight.style.opacity = '1';
+      typeText(introTitleRight, '屬於你的風格香', 100, () => {
+        // 4. Intro text fades in
+        introTextWrapper.style.animation = 'fadeIn 2s forwards';
+        introTextWrapper.addEventListener('animationend', () => {
+          // 5. Start button slides up
+          startBtn.style.animation = 'fadeInUp 2s forwards';
+        }, { once: true });
+      });
+    });
+  }, { once: true });
 }
 
-async function animateQuizQuestion(text) {
-  await typeText(questionTitle, text, 50);
+// Function to animate the quiz question title
+function animateQuizQuestion(text) {
+  typeText(questionTitle, text, 50);
 }
 
-async function animateResultPage(resultData) {
-  // Reset previous result animations
-  resultSubtitle.style.animation = 'none';
-  resultTitle.style.animation = 'none';
-  resultImageContainer.style.animation = 'none';
-  resultDesc.style.animation = 'none';
+// Function to animate the result page
+function animateResultPage(resultData) {
+  // Reset previous animations
+  resultSubtitle.style.animation = '';
+  resultTitle.style.animation = '';
+  resultImageContainer.style.animation = '';
+  resultDesc.style.animation = '';
 
-  // Trigger animations in sequence
-  await delay(500);
-
-  // 1. Fade in "你的風格香是"
+  // 1. "你的風格香是" fades in
   resultSubtitle.textContent = "你的風格香是";
   resultSubtitle.style.animation = 'fadeIn 2s forwards';
-  await delay(1500);
 
-  // 2. Fade in result title
-  resultTitle.textContent = resultData.title;
-  resultTitle.style.animation = 'fadeIn 2s forwards';
-  await delay(1500);
+  resultSubtitle.addEventListener('animationend', () => {
+    // 2. Result title fades in
+    resultTitle.textContent = resultData.title;
+    resultTitle.style.animation = 'fadeIn 2s forwards';
 
-  // 3. Flip image
-  resultImage.src = resultData.image;
-  resultImageContainer.style.animation = 'flipImage 2s ease-in-out forwards';
-  await delay(2000);
-
-  // 4. Fade in descriptions and hashtags
-  resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
-  resultDesc.innerHTML = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
-  resultDesc.style.animation = 'fadeIn 2s forwards';
+    resultTitle.addEventListener('animationend', () => {
+      // 3. Image flips
+      resultImage.src = resultData.image;
+      resultImageContainer.style.animation = 'flipImage 2s ease-in-out forwards';
+      
+      resultImageContainer.addEventListener('animationend', () => {
+        // 4. Description and hashtags fade in
+        resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
+        resultDesc.innerHTML = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
+        resultDesc.style.animation = 'fadeIn 2s forwards';
+      }, { once: true });
+    }, { once: true });
+  }, { once: true });
 }
 
-// Event Handlers
-document.addEventListener('DOMContentLoaded', () => {
-  animateIntroPage();
-});
+// Event Listeners
+document.addEventListener('DOMContentLoaded', animateIntroPage);
 
 startBtn.addEventListener('click', () => {
   intro.classList.add('hidden');
   quiz.classList.remove('hidden');
   current = 0;
-  scores = { woody: 0, citrus: 0, floral: 0, musk: 0 };
+  scores = { woody:0, citrus:0, floral:0, musk:0 };
   renderQuestion();
 });
 
@@ -209,7 +219,7 @@ function renderQuestion() {
   progressText.textContent = `第 ${current + 1} 題 / ${total} 題`;
   answersDiv.innerHTML = '';
   currentSelection = null;
-
+  
   q.answers.forEach((a) => {
     const btn = document.createElement('button');
     btn.className = 'answer-btn';
@@ -219,20 +229,20 @@ function renderQuestion() {
     answersDiv.appendChild(btn);
   });
   nextBtn.style.display = 'none';
-
+  
   animateQuizQuestion(q.question);
 }
 
 function selectAnswer(selectedBtn) {
   const selectedType = selectedBtn.dataset.type;
-
+  
   answersDiv.querySelectorAll('button').forEach(b => {
     b.classList.remove('selected');
   });
-
+  
   selectedBtn.classList.add('selected');
   currentSelection = selectedType;
-
+  
   if (currentSelection) {
     nextBtn.style.display = 'inline-block';
   }
@@ -253,7 +263,7 @@ nextBtn.addEventListener('click', () => {
 function showResult() {
   quiz.classList.add('hidden');
   resultSection.classList.remove('hidden');
-
+  
   let highest = 'woody';
   let max = -1;
   for (const k in scores) {
@@ -269,8 +279,8 @@ function showResult() {
 restartBtn.addEventListener('click', () => {
   resultSection.classList.add('hidden');
   intro.classList.remove('hidden');
-
-  // Reset all animations and states
+  
+  // Reset all animations for a clean start
   resultSubtitle.style.animation = '';
   resultTitle.style.animation = '';
   resultImageContainer.style.animation = '';
@@ -280,7 +290,7 @@ restartBtn.addEventListener('click', () => {
   introTitleRight.textContent = '';
   introTextWrapper.style.animation = '';
   startBtn.style.animation = '';
-
+  
   animateIntroPage();
 });
 
@@ -288,7 +298,7 @@ shareBtn.addEventListener('click', () => {
   const highest = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
   const resultText = results[highest].title;
   const shareText = `我的香氣人格是【${resultText}】！快來測測看你是哪一種吧！\n${window.location.href}`;
-
+  
   if (navigator.share) {
     navigator.share({
       title: '香氣人格測驗',
