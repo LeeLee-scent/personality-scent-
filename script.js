@@ -1,4 +1,4 @@
-// script.js - 香氣人格測驗 (終極優化版)
+// script.js - 香氣人格測驗 (最終版本)
 const questions = [
   {
     question: "Q1. 清晨起床的你，最需要什麼來開啟新的一天？",
@@ -117,6 +117,13 @@ const resultDesc = document.getElementById('resultDesc');
 const resultHashtags = document.getElementById('resultHashtags');
 const restartBtn = document.getElementById('restartBtn');
 const shareBtn = document.getElementById('shareBtn');
+// 新增：抓取結果頁面的所有子元素，以供統一操作
+const resultElements = [
+  resultSubtitle,
+  resultTitle,
+  resultImageContainer,
+  resultDesc
+];
 
 // Intro Page Elements
 const logo = document.querySelector('.site-header .logo');
@@ -167,13 +174,6 @@ function animateQuizQuestion(text) {
 
 // Simplified function to animate the result page
 function animateResultPage(resultData) {
-  // Reset animations for a clean start
-  resultSubtitle.style.animation = 'none';
-  resultTitle.style.animation = 'none';
-  resultImageContainer.style.animation = 'none';
-  resultDesc.style.animation = 'none';
-  resultHashtags.style.animation = 'none';
-  
   // Set result data
   resultSubtitle.textContent = "你的風格香是";
   resultTitle.textContent = resultData.title;
@@ -181,21 +181,10 @@ function animateResultPage(resultData) {
   resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
   resultDesc.innerHTML = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
   
-  // Animate elements with a staggered delay
-  const elementsToAnimate = [
-    resultSubtitle,
-    resultTitle,
-    resultImageContainer,
-    resultDesc
-  ];
-  
-  elementsToAnimate.forEach((element, index) => {
-    setTimeout(() => {
-      element.style.animation = 'fadeIn 2s forwards';
-    }, index * 200); // Staggered delay of 200ms
+  // 核心改動：為每個結果元素添加動畫效果
+  resultElements.forEach((element) => {
+    element.style.animation = 'fadeInUp 2s forwards';
   });
-
-  // Since hashtags are part of the description card, they will fade in with it.
 }
 
 // Event Listeners
@@ -277,10 +266,10 @@ restartBtn.addEventListener('click', () => {
   intro.classList.remove('hidden');
   
   // Reset all animations for a clean start
-  resultSubtitle.style.animation = 'none';
-  resultTitle.style.animation = 'none';
-  resultImageContainer.style.animation = 'none';
-  resultDesc.style.animation = 'none';
+  resultElements.forEach(element => {
+    element.style.animation = 'none';
+    element.style.opacity = '0';
+  });
   logo.style.animation = 'none';
   introTitleLeft.textContent = '';
   introTitleRight.textContent = '';
@@ -288,10 +277,6 @@ restartBtn.addEventListener('click', () => {
   startBtn.style.animation = 'none';
   
   // To re-trigger animation, clear the style property
-  resultSubtitle.style.animation = '';
-  resultTitle.style.animation = '';
-  resultImageContainer.style.animation = '';
-  resultDesc.style.animation = '';
   logo.style.animation = '';
   introTitleLeft.style.opacity = '0';
   introTitleRight.style.opacity = '0';
