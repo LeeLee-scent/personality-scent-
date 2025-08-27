@@ -1,4 +1,4 @@
-// script.js - 香氣人格測驗 (最終版本)
+// script.js - 香氣人格測驗 (最終版本 - 圖片預載優化)
 const questions = [
   {
     question: "Q1. 清晨起床的你，最需要什麼來開啟新的一天？",
@@ -98,6 +98,7 @@ let current = 0;
 let scores = { woody:0, citrus:0, floral:0, musk:0 };
 const total = questions.length;
 let currentSelection = null;
+let preloadedImages = {}; // 新增：用於儲存預載圖片
 
 // Elements
 const intro = document.getElementById('intro');
@@ -117,7 +118,6 @@ const resultDesc = document.getElementById('resultDesc');
 const resultHashtags = document.getElementById('resultHashtags');
 const restartBtn = document.getElementById('restartBtn');
 const shareBtn = document.getElementById('shareBtn');
-// 新增：抓取結果頁面的所有子元素，以供統一操作
 const resultElements = [
   resultSubtitle,
   resultTitle,
@@ -149,10 +149,33 @@ function typeText(element, text, speed = 50, callback) {
   typing();
 }
 
+/**
+ * 圖片預載函式
+ * 確保在測驗開始前，所有結果圖片都已載入完成
+ */
+function preloadImages() {
+  const imagePromises = Object.values(results).map(result => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = result.image;
+      img.onload = () => {
+        preloadedImages[result.image] = img;
+        resolve();
+      };
+      img.onerror = reject;
+    });
+  });
+
+  return Promise.all(imagePromises);
+}
+
 // Function to handle the intro page animation sequence
-function animateIntroPage() {
+async function animateIntroPage() {
   logo.style.animation = 'fadeInUp 2s forwards';
 
+  // 在顯示開始按鈕前預載圖片
+  await preloadImages();
+  
   setTimeout(() => {
     introTitleLeft.style.opacity = '1';
     typeText(introTitleLeft, '測一測', 100, () => {
@@ -161,6 +184,8 @@ function animateIntroPage() {
         introTextWrapper.style.animation = 'fadeIn 2s forwards';
         setTimeout(() => {
           startBtn.style.animation = 'fadeInUp 2s forwards';
+          // 確保圖片預載完成後，才允許開始測驗
+          startBtn.disabled = false;
         }, 1500);
       });
     });
@@ -177,7 +202,8 @@ function animateResultPage(resultData) {
   // Set result data
   resultSubtitle.textContent = "你的風格香是";
   resultTitle.textContent = resultData.title;
-  resultImage.src = resultData.image;
+  // 直接使用預載好的圖片
+  resultImage.src = preloadedImages[resultData.image].src;
   resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
   resultDesc.innerHTML = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
   
@@ -188,7 +214,11 @@ function animateResultPage(resultData) {
 }
 
 // Event Listeners
-document.addEventListener('DOMContentLoaded', animateIntroPage);
+document.addEventListener('DOMContentLoaded', () => {
+  // 頁面載入時，先禁用開始按鈕，避免在圖片載入完成前點擊
+  startBtn.disabled = true;
+  animateIntroPage();
+});
 
 startBtn.addEventListener('click', () => {
   intro.classList.add('hidden');
@@ -283,6 +313,7 @@ restartBtn.addEventListener('click', () => {
   introTextWrapper.style.opacity = '0';
   startBtn.style.opacity = '0';
   
+  // 重新啟動首頁動畫，並預載圖片
   animateIntroPage();
 });
 
