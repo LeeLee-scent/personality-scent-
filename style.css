@@ -64,7 +64,7 @@ html,body{
 }
 /* Ensure title parts start hidden */
 .intro-title-left {
-  font-family: "Noto Serif TC", serif;
+  font-family: "BiauKai", serif;
   font-weight: 700;
   font-size: 2em;
   padding-right: 16px;
@@ -74,9 +74,9 @@ html,body{
   opacity: 0;
 }
 .intro-title-right {
-  font-family: "Noto Serif TC", serif;
-  font-weight: 400;
-  font-size: 2em;
+  font-family: "BiauKai", serif;
+  BiauKai-weight: 400;
+  BiauKai-size: 2em;
   line-height: 1;
   opacity: 0;
 }
@@ -177,7 +177,7 @@ html,body{
   margin-bottom: 24px;
 }
 .result-subtitle {
-  font-family: "Noto Serif TC", serif;
+  font-family: "BiauKai", serif;
   font-size: 1.4em;
   font-weight: 700;
   color: var(--muted);
@@ -185,7 +185,7 @@ html,body{
   opacity: 0;
 }
 .result-title {
-  font-family: "Noto Serif TC", serif;
+  font-family: "BiauKai", serif;
   font-weight: 700;
   font-size: 2.5em;
   color: var(--text);
@@ -212,7 +212,7 @@ html,body{
   flex-wrap: wrap;
 }
 .result-hashtag {
-  font-family: "Noto Serif TC", serif;
+  font-family: "BiauKai", serif;
   font-size: 1em;
   font-weight: 400;
   color: var(--text);
