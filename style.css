@@ -3,7 +3,6 @@
   --bg:#fffaf5;
   --card:#fff;
   --accent:#e6d3c4;
-  --text:#4b3f36;
   --muted:#7a6a60;
   --cream:#3b2f2f; /* 米白色 */
 }
@@ -14,8 +13,19 @@ html,body{
   font-family: "ZCOOL KuaiLe", "Noto Serif TC", "BiauKai", "DFKai-SB", "KaiTi", sans-serif;
   color:var(--text);
   -webkit-font-smoothing:antialiased;
-  background: linear-gradient(135deg, #fdf8f3, #ece0d1) !important;
+  /* 這裡新增背景動畫 */
+  background: linear-gradient(135deg, #fdf8f3, #ece0d1);
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
 }
+
+/* 新增背景漸層動畫效果 */
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .site-header{
   display:flex;
   justify-content:center;
@@ -64,7 +74,7 @@ html,body{
 }
 /* Ensure title parts start hidden */
 .intro-title-left {
-  font-family: "BiauKai", serif;
+  font-family: "Noto Serif TC", serif;
   font-weight: 700;
   font-size: 2em;
   padding-right: 16px;
@@ -74,9 +84,9 @@ html,body{
   opacity: 0;
 }
 .intro-title-right {
-  font-family: "BiauKai", serif;
-  BiauKai-weight: 400;
-  BiauKai-size: 2em;
+  font-family: "Noto Serif TC", serif;
+  font-weight: 400;
+  font-size: 2em;
   line-height: 1;
   opacity: 0;
 }
@@ -173,37 +183,46 @@ html,body{
 #result {
   text-align: center;
 }
+.result-container {
+  opacity: 0; /* Ensures the container starts hidden */
+}
 .result-header {
   margin-bottom: 24px;
 }
 .result-subtitle {
-  font-family: "BiauKai", serif;
+  font-family: "Noto Serif TC", serif;
   font-size: 1.4em;
   font-weight: 700;
   color: var(--muted);
   margin: 0 0 8px 0;
-  opacity: 0;
 }
 .result-title {
-  font-family: "BiauKai", serif;
+  font-family: "Noto Serif TC", serif;
   font-weight: 700;
   font-size: 2.5em;
   color: var(--text);
   margin: 0;
-  opacity: 0;
 }
 .result-image-container {
   position: relative;
   max-width: 420px;
   margin: 0 auto 12px auto;
-  opacity: 0;
 }
 .result-main-image {
   width: 100%;
   height: auto;
   border-radius: 14px;
   display: block;
+  /* 這裡新增圖片的陰影和過渡效果 */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+/* 新增圖片懸停時的上浮效果 */
+.result-main-image:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+
 .result-hashtags {
   display: flex;
   justify-content: center;
@@ -212,7 +231,7 @@ html,body{
   flex-wrap: wrap;
 }
 .result-hashtag {
-  font-family: "BiauKai", serif;
+  font-family: "Noto Serif TC", serif;
   font-size: 1em;
   font-weight: 400;
   color: var(--text);
@@ -229,7 +248,6 @@ html,body{
   line-height: 1.2;
   text-align: left;
   margin-top: 12px;
-  opacity: 0;
 }
 .result-separator {
   height: 2px;
