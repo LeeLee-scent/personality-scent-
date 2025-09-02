@@ -1,4 +1,4 @@
-// script.js - 香氣人格測驗 (最終版本 - 圖片預載優化)
+// script.js - 香氣人格測驗 (終極優化版)
 const questions = [
   {
     question: "Q1. 清晨起床的你，最需要什麼來開啟新的一天？",
@@ -106,6 +106,7 @@ const startBtn = document.getElementById('startBtn');
 const quiz = document.getElementById('quiz');
 const questionTitle = document.getElementById('questionTitle');
 const answersDiv = document.getElementById('answers');
+const questionImageContainer = document.querySelector('.qimage-container');
 const questionImage = document.getElementById('questionImage');
 const progressText = document.getElementById('progressText');
 const nextBtn = document.getElementById('nextBtn');
@@ -122,7 +123,10 @@ const resultElements = [
   resultSubtitle,
   resultTitle,
   resultImageContainer,
-  resultDesc
+  resultHashtags,
+  resultDesc,
+  restartBtn,
+  shareBtn
 ];
 
 // Intro Page Elements
@@ -134,6 +138,13 @@ const introTextWrapper = document.querySelector('.intro-text-wrapper');
 // Utility Functions
 function typeText(element, text, speed = 50, callback) {
   element.textContent = '';
+  // 新增：為問題標題添加底線
+  if (element.id === 'questionTitle') {
+    element.classList.add('question-title-line');
+  } else {
+    element.classList.remove('question-title-line');
+  }
+  
   element.classList.add('typewriter');
   let i = 0;
   function typing() {
@@ -151,7 +162,6 @@ function typeText(element, text, speed = 50, callback) {
 
 /**
  * 圖片預載函式
- * 確保在測驗開始前，所有結果圖片都已載入完成
  */
 function preloadImages() {
   const imagePromises = Object.values(results).map(result => {
@@ -165,17 +175,14 @@ function preloadImages() {
       img.onerror = reject;
     });
   });
-
   return Promise.all(imagePromises);
 }
 
 // Function to handle the intro page animation sequence
 async function animateIntroPage() {
   logo.style.animation = 'fadeInUp 2s forwards';
-
-  // 在顯示開始按鈕前預載圖片
+  startBtn.disabled = true;
   await preloadImages();
-  
   setTimeout(() => {
     introTitleLeft.style.opacity = '1';
     typeText(introTitleLeft, '測一測', 100, () => {
@@ -184,7 +191,6 @@ async function animateIntroPage() {
         introTextWrapper.style.animation = 'fadeIn 2s forwards';
         setTimeout(() => {
           startBtn.style.animation = 'fadeInUp 2s forwards';
-          // 確保圖片預載完成後，才允許開始測驗
           startBtn.disabled = false;
         }, 1500);
       });
@@ -197,28 +203,25 @@ function animateQuizQuestion(text) {
   typeText(questionTitle, text, 50);
 }
 
-// Simplified function to animate the result page
+// 分段動畫函式
 function animateResultPage(resultData) {
-  // Set result data
   resultSubtitle.textContent = "你的風格香是";
   resultTitle.textContent = resultData.title;
-  // 直接使用預載好的圖片
   resultImage.src = preloadedImages[resultData.image].src;
   resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
   resultDesc.innerHTML = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
   
-  // 核心改動：為每個結果元素添加動畫效果
-  resultElements.forEach((element) => {
-    element.style.animation = 'fadeInUp 2s forwards';
+  let delay = 0;
+  resultElements.forEach((element, index) => {
+    setTimeout(() => {
+      element.style.animation = 'fadeInUp 1s forwards';
+    }, delay);
+    delay += 200;
   });
 }
 
 // Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
-  // 頁面載入時，先禁用開始按鈕，避免在圖片載入完成前點擊
-  startBtn.disabled = true;
-  animateIntroPage();
-});
+document.addEventListener('DOMContentLoaded', animateIntroPage);
 
 startBtn.addEventListener('click', () => {
   intro.classList.add('hidden');
@@ -230,6 +233,7 @@ startBtn.addEventListener('click', () => {
 
 function renderQuestion() {
   const q = questions[current];
+  // 更新圖片的父容器
   questionImage.src = q.image;
   progressText.textContent = `第 ${current + 1} 題 / ${total} 題`;
   answersDiv.innerHTML = '';
@@ -295,25 +299,23 @@ restartBtn.addEventListener('click', () => {
   resultSection.classList.add('hidden');
   intro.classList.remove('hidden');
   
-  // Reset all animations for a clean start
   resultElements.forEach(element => {
     element.style.animation = 'none';
     element.style.opacity = '0';
   });
+  
   logo.style.animation = 'none';
   introTitleLeft.textContent = '';
   introTitleRight.textContent = '';
   introTextWrapper.style.animation = 'none';
   startBtn.style.animation = 'none';
   
-  // To re-trigger animation, clear the style property
   logo.style.animation = '';
   introTitleLeft.style.opacity = '0';
   introTitleRight.style.opacity = '0';
   introTextWrapper.style.opacity = '0';
   startBtn.style.opacity = '0';
   
-  // 重新啟動首頁動畫，並預載圖片
   animateIntroPage();
 });
 
