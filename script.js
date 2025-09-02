@@ -1,4 +1,4 @@
-// script.js - 香氣人格測驗 (最終版本 - 圖片預載優化)
+// script.js - 香氣人格測驗 (終極優化版)
 const questions = [
   {
     question: "Q1. 清晨起床的你，最需要什麼來開啟新的一天？",
@@ -98,7 +98,7 @@ let current = 0;
 let scores = { woody:0, citrus:0, floral:0, musk:0 };
 const total = questions.length;
 let currentSelection = null;
-let preloadedImages = {}; // 新增：用於儲存預載圖片
+let preloadedImages = {}; 
 
 // Elements
 const intro = document.getElementById('intro');
@@ -122,7 +122,10 @@ const resultElements = [
   resultSubtitle,
   resultTitle,
   resultImageContainer,
-  resultDesc
+  resultHashtags,
+  resultDesc,
+  restartBtn,
+  shareBtn
 ];
 
 // Intro Page Elements
@@ -133,25 +136,32 @@ const introTextWrapper = document.querySelector('.intro-text-wrapper');
 
 // Utility Functions
 function typeText(element, text, speed = 50, callback) {
-  element.textContent = '';
-  element.classList.add('typewriter');
+  element.innerHTML = ''; // 修改：使用 innerHTML 以便處理 <p> 和 <strong> 標籤
+  element.classList.add('typewriter-effect'); // 新增：打字機效果專屬 class
   let i = 0;
   function typing() {
     if (i < text.length) {
-      element.textContent += text.charAt(i);
-      i++;
+      // 處理 HTML 標籤
+      if (text.charAt(i) === '<') {
+        let tagEnd = text.indexOf('>', i);
+        element.innerHTML += text.substring(i, tagEnd + 1);
+        i = tagEnd + 1;
+      } else {
+        element.innerHTML += text.charAt(i);
+        i++;
+      }
       setTimeout(typing, speed);
     } else {
-      element.classList.remove('typewriter');
+      element.classList.remove('typewriter-effect');
       if (callback) callback();
     }
   }
   typing();
 }
 
+
 /**
  * 圖片預載函式
- * 確保在測驗開始前，所有結果圖片都已載入完成
  */
 function preloadImages() {
   const imagePromises = Object.values(results).map(result => {
@@ -172,8 +182,8 @@ function preloadImages() {
 // Function to handle the intro page animation sequence
 async function animateIntroPage() {
   logo.style.animation = 'fadeInUp 2s forwards';
+  startBtn.disabled = true;
 
-  // 在顯示開始按鈕前預載圖片
   await preloadImages();
   
   setTimeout(() => {
@@ -184,7 +194,6 @@ async function animateIntroPage() {
         introTextWrapper.style.animation = 'fadeIn 2s forwards';
         setTimeout(() => {
           startBtn.style.animation = 'fadeInUp 2s forwards';
-          // 確保圖片預載完成後，才允許開始測驗
           startBtn.disabled = false;
         }, 1500);
       });
@@ -194,31 +203,38 @@ async function animateIntroPage() {
 
 // Function to animate the quiz question title
 function animateQuizQuestion(text) {
-  typeText(questionTitle, text, 50);
+  questionTitle.textContent = text;
 }
 
-// Simplified function to animate the result page
+// 分段動畫函式
 function animateResultPage(resultData) {
-  // Set result data
   resultSubtitle.textContent = "你的風格香是";
   resultTitle.textContent = resultData.title;
-  // 直接使用預載好的圖片
   resultImage.src = preloadedImages[resultData.image].src;
   resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
-  resultDesc.innerHTML = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
   
-  // 核心改動：為每個結果元素添加動畫效果
-  resultElements.forEach((element) => {
-    element.style.animation = 'fadeInUp 2s forwards';
+  // 核心修改：為 resultDesc 呼叫打字機函式
+  const combinedText = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
+  typeText(resultDesc, combinedText, 25); // 調整打字速度為 25ms
+  
+  // 針對每個元素，依序套用淡入動畫
+  let delay = 0;
+  [resultSubtitle, resultTitle, resultImageContainer, resultHashtags].forEach(element => {
+    setTimeout(() => {
+      element.style.animation = 'fadeInUp 1s forwards';
+    }, delay);
+    delay += 200; // 每個元素延遲 200ms
   });
+  
+  // 延遲顯示按鈕，確保打字機效果完成後再顯示
+  setTimeout(() => {
+    restartBtn.style.animation = 'fadeInUp 1s forwards';
+    shareBtn.style.animation = 'fadeInUp 1s forwards';
+  }, delay + 500); // 額外延遲 500ms
 }
 
 // Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
-  // 頁面載入時，先禁用開始按鈕，避免在圖片載入完成前點擊
-  startBtn.disabled = true;
-  animateIntroPage();
-});
+document.addEventListener('DOMContentLoaded', animateIntroPage);
 
 startBtn.addEventListener('click', () => {
   intro.classList.add('hidden');
@@ -295,25 +311,23 @@ restartBtn.addEventListener('click', () => {
   resultSection.classList.add('hidden');
   intro.classList.remove('hidden');
   
-  // Reset all animations for a clean start
   resultElements.forEach(element => {
     element.style.animation = 'none';
     element.style.opacity = '0';
   });
+  
   logo.style.animation = 'none';
   introTitleLeft.textContent = '';
   introTitleRight.textContent = '';
   introTextWrapper.style.animation = 'none';
   startBtn.style.animation = 'none';
   
-  // To re-trigger animation, clear the style property
   logo.style.animation = '';
   introTitleLeft.style.opacity = '0';
   introTitleRight.style.opacity = '0';
   introTextWrapper.style.opacity = '0';
   startBtn.style.opacity = '0';
   
-  // 重新啟動首頁動畫，並預載圖片
   animateIntroPage();
 });
 
