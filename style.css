@@ -1,10 +1,11 @@
-/* Style: 文青療癒手繪風 (簡約版) */
+/* Style: 文青療癒手繪風 (升級版) */
 :root{
   --bg:#fffaf5;
   --card:#fff;
   --accent:#e6d3c4;
   --muted:#7a6a60;
   --cream:#3b2f2f; /* 米白色 */
+  --soft-shadow: 0 8px 20px rgba(75,63,54,0.08);
 }
 *{box-sizing:border-box}
 html,body{
@@ -13,13 +14,11 @@ html,body{
   font-family: "ZCOOL KuaiLe", "Noto Serif TC", "BiauKai", "DFKai-SB", "KaiTi", sans-serif;
   color:var(--text);
   -webkit-font-smoothing:antialiased;
-  /* 這裡新增背景動畫 */
   background: linear-gradient(135deg, #fdf8f3, #ece0d1);
   background-size: 400% 400%;
   animation: gradientAnimation 15s ease infinite;
 }
 
-/* 新增背景漸層動畫效果 */
 @keyframes gradientAnimation {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -42,7 +41,9 @@ html,body{
   border-radius:16px;
   padding:20px;
   margin-bottom:18px;
-  box-shadow:0 8px 20px rgba(75,63,54,0.08);
+  box-shadow:var(--soft-shadow);
+  /* 新增：為卡片增加漸層背景 */
+  background: linear-gradient(to top, #fcfaf8, #ffffff);
 }
 .site-header .card {
   background: none;
@@ -50,7 +51,6 @@ html,body{
   box-shadow: none;
   margin-bottom: 0;
 }
-/* Ensure Logo starts hidden */
 .site-header .logo {
   max-width: 400px;
   width: 100%;
@@ -58,7 +58,6 @@ html,body{
   margin: 0 auto;
   opacity: 0;
 }
-/* Intro page styling */
 #intro {
   display: flex;
   flex-direction: column;
@@ -72,7 +71,6 @@ html,body{
   justify-content: center;
   margin-bottom: 24px;
 }
-/* Ensure title parts start hidden */
 .intro-title-left {
   font-family: "Noto Serif TC", serif;
   font-weight: 700;
@@ -102,7 +100,6 @@ html,body{
   line-height: 1;
   letter-spacing: 0.5px;
 }
-/* Ensure button starts hidden */
 #intro #startBtn {
   display: block;
   margin: 20px auto 0;
@@ -134,6 +131,9 @@ html,body{
   text-align:left;
   cursor:pointer;
   transition:transform .12s ease,box-shadow .12s;
+  /* 新增：答案按鈕的背景漸層和陰影 */
+  background: linear-gradient(to top, #f6efe8, #ffffff);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
 .answer-btn:hover{
   transform:translateY(-3px);
@@ -144,7 +144,24 @@ html,body{
   color: var(--text);
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-.qimage{width:100%;height:auto;border-radius:10px;margin-bottom:12px;object-fit:cover}
+.qimage-container {
+  width: 100%;
+  height: 240px; /* 新增：固定高度，讓圖片有更好的佈局 */
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  box-shadow: var(--soft-shadow);
+}
+.qimage{
+  width:100%;
+  height:100%;
+  object-fit:cover; /* 新增：讓圖片滿版顯示並裁切 */
+  transition: transform 0.5s ease;
+}
+/* 圖片懸停時放大效果 */
+.qimage:hover {
+  transform: scale(1.05);
+}
 .progress{font-size:14px;color:var(--muted);margin-bottom:8px}
 .actions{
   display:flex;
@@ -179,12 +196,32 @@ html,body{
   from { opacity: 0; }
   to { opacity: 1; }
 }
+/* 新增：標題底線動畫 */
+.question-title-line {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px;
+}
+.question-title-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: var(--accent);
+  width: 0;
+  animation: drawLine 0.8s ease-out 0.3s forwards;
+}
+@keyframes drawLine {
+  to { width: 100%; }
+}
+
 /* Result Page Styling */
 #result {
   text-align: center;
 }
 .result-container {
-  opacity: 0; /* Ensures the container starts hidden */
+  opacity: 0;
 }
 .result-header {
   margin-bottom: 24px;
@@ -213,11 +250,9 @@ html,body{
   height: auto;
   border-radius: 14px;
   display: block;
-  /* 這裡新增圖片的陰影和過渡效果 */
   box-shadow: 0 8px 16px rgba(0,0,0,0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-/* 新增圖片懸停時的上浮效果 */
 .result-main-image:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 24px rgba(0,0,0,0.15);
