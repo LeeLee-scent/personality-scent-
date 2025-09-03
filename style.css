@@ -1,6 +1,6 @@
-/* Style: 文青療癒手繪風 */
+/* Style: 文青療癒手繪風 (最終版) */
 :root {
-  --bg: #fdf8f3;
+  --bg: #fdf8f3; /* 修改：淺米色背景 */
   --card: #ffffff;
   --accent: #e6d3c4;
   --muted: #7a6a60;
@@ -202,6 +202,7 @@ body {
   margin-bottom: 8px;
 }
 
+/* 修正：讓下一題按鈕正確置中 */
 .nav {
   display: flex;
   justify-content: center;
@@ -212,6 +213,40 @@ body {
   text-align: center;
   padding: 18px 0;
   color: var(--muted);
+}
+
+/* 修正：將 .typewriter 更名為 .typewriter-effect */
+.typewriter-effect {
+  overflow: hidden;
+  white-space: pre-wrap;
+  border-right: .15em solid var(--muted);
+  animation: typeCaret 0.8s steps(1) infinite;
+}
+
+@keyframes typeCaret {
+  50% {
+    border-color: transparent;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* --- 結果頁面專屬樣式 --- */
@@ -308,39 +343,8 @@ body {
   margin-top: 24px;
 }
 
-/* 新增：打字機效果的樣式 */
-.typewriter-effect {
-  overflow: hidden;
-  white-space: pre-wrap;
-  border-right: .15em solid var(--muted);
-  animation: typeCaret 0.8s steps(1) infinite;
-}
-
-@keyframes typeCaret {
-  50% {
-    border-color: transparent;
-  }
-}
-
-/* 動畫效果 */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.result-analysis {
+  display: none;
 }
 
 @media (max-width: 600px) {
