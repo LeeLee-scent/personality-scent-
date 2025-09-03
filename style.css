@@ -1,6 +1,6 @@
-/* Style: 文青療癒手繪風 (最終版) */
+/* Style: 文青療癒手繪風 (終極版) */
 :root {
-  --bg: #fdf8f3; /* 修改：淺米色背景 */
+  --bg: #fdf8f3;
   --card: #ffffff;
   --accent: #e6d3c4;
   --muted: #7a6a60;
@@ -215,40 +215,6 @@ body {
   color: var(--muted);
 }
 
-.typewriter {
-  overflow: hidden;
-  border-right: .15em solid var(--muted);
-  white-space: pre-wrap;
-  margin: 0 auto;
-  animation: typeCaret 1s steps(1) infinite;
-}
-
-@keyframes typeCaret {
-  50% {
-    border-color: transparent;
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 /* --- 結果頁面專屬樣式 --- */
 #result {
   text-align: center;
@@ -349,7 +315,7 @@ body {
 
 /* 新增：打字機效果的樣式 */
 .typewriter-effect {
-  overflow: hidden; /* 隱藏超出邊界的文字 */
+  overflow: hidden;
   white-space: pre-wrap;
   border-right: .15em solid var(--muted);
   animation: typeCaret 0.8s steps(1) infinite;
