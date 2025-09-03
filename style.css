@@ -1,4 +1,4 @@
-/* Style: 文青療癒手繪風 (終極版) */
+/* Style: 文青療癒手繪風 */
 :root {
   --bg: #fdf8f3;
   --card: #ffffff;
@@ -202,9 +202,8 @@ body {
   margin-bottom: 8px;
 }
 
-.actions {
+.nav {
   display: flex;
-  gap: 12px;
   justify-content: center;
   margin-top: 18px;
 }
@@ -309,10 +308,6 @@ body {
   margin-top: 24px;
 }
 
-.result-analysis {
-  display: none;
-}
-
 /* 新增：打字機效果的樣式 */
 .typewriter-effect {
   overflow: hidden;
@@ -324,6 +319,27 @@ body {
 @keyframes typeCaret {
   50% {
     border-color: transparent;
+  }
+}
+
+/* 動畫效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
