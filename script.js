@@ -136,12 +136,11 @@ const introTextWrapper = document.querySelector('.intro-text-wrapper');
 
 // Utility Functions
 function typeText(element, text, speed = 50, callback) {
-  element.innerHTML = ''; // 修改：使用 innerHTML 以便處理 <p> 和 <strong> 標籤
-  element.classList.add('typewriter-effect'); // 新增：打字機效果專屬 class
+  element.innerHTML = '';
+  element.classList.add('typewriter-effect');
   let i = 0;
   function typing() {
     if (i < text.length) {
-      // 處理 HTML 標籤
       if (text.charAt(i) === '<') {
         let tagEnd = text.indexOf('>', i);
         element.innerHTML += text.substring(i, tagEnd + 1);
@@ -158,7 +157,6 @@ function typeText(element, text, speed = 50, callback) {
   }
   typing();
 }
-
 
 /**
  * 圖片預載函式
@@ -213,24 +211,21 @@ function animateResultPage(resultData) {
   resultImage.src = preloadedImages[resultData.image].src;
   resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
   
-  // 核心修改：為 resultDesc 呼叫打字機函式
   const combinedText = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
-  typeText(resultDesc, combinedText, 25); // 調整打字速度為 25ms
+  typeText(resultDesc, combinedText, 25);
   
-  // 針對每個元素，依序套用淡入動畫
   let delay = 0;
   [resultSubtitle, resultTitle, resultImageContainer, resultHashtags].forEach(element => {
     setTimeout(() => {
       element.style.animation = 'fadeInUp 1s forwards';
     }, delay);
-    delay += 200; // 每個元素延遲 200ms
+    delay += 200;
   });
   
-  // 延遲顯示按鈕，確保打字機效果完成後再顯示
   setTimeout(() => {
     restartBtn.style.animation = 'fadeInUp 1s forwards';
     shareBtn.style.animation = 'fadeInUp 1s forwards';
-  }, delay + 500); // 額外延遲 500ms
+  }, delay + 500);
 }
 
 // Event Listeners
