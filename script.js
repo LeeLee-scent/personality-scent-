@@ -136,8 +136,8 @@ const introTextWrapper = document.querySelector('.intro-text-wrapper');
 
 // Utility Functions
 function typeText(element, text, speed = 50, callback) {
-  element.innerHTML = '';
-  element.classList.add('typewriter-effect');
+  element.innerHTML = ''; 
+  element.classList.add('typewriter-effect'); 
   let i = 0;
   function typing() {
     if (i < text.length) {
