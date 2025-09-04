@@ -82,4 +82,268 @@ const results = {
     image: "images/result_floral.jpg",
     hashtags: ["#感性細膩", "#溫暖療癒", "#優雅浪漫"],
     description: "你擁有一顆溫暖、細膩的心，能夠敏銳地感知他人的情緒與需求。你的氣質優雅而親切，充滿同理心，在人際關係中扮演著溫和的協調者和療癒者。你重視情感的連結，善於營造舒適與和諧的氛圍。你的感性與內在力量，使你總能成為別人尋求慰藉的對象，總是以最溫柔的方式給予支持與陪伴。",
-    analysis: "你的選擇傾向於感性、浪漫且溫馨的體驗。你
+    analysis: "你的選擇傾向於感性、浪漫且溫馨的體驗。你相信美好的事物能滋養心靈，並享受生活中的儀式感。花香調，如<strong>玫瑰</strong>、<strong>茉莉</strong>、<strong>橙花</strong>，能凸顯你柔美且充滿內在力量的特質。這些香氣不僅增添你的個人魅力，更能傳達出你溫柔而堅定的性格，讓人們因為你的存在而感到美好。"
+  },
+  musk: {
+    title: "麝香神秘型",
+    image: "images/result_musk.jpg",
+    hashtags: ["#高雅內斂", "#神秘直覺", "#獨立思考"],
+    description: "你是一位安靜、內斂卻充滿深度的人。你的氣場獨特而高雅，不需言語便能傳達出強烈的個人風格。你擁有敏銳的直覺和獨立的思考能力，不隨波逐流，總是保持著一份神秘感，讓人們忍不住想更深入地了解你。你重視個人空間，從獨處中汲取靈感與力量，不輕易表達但內心世界豐富。",
+    analysis: "你的選擇反映出你獨特的審美觀和對純粹的追求。你重視個人空間，從獨處中汲取靈感與力量。麝香，結合<strong>琥珀</strong>、<strong>廣藿香</strong>等後調，能完美烘托你乾淨俐落、高雅內斂的特質。這些香氣低調而持久，像你的個性一樣，雖然不喧鬧，卻能留下深刻且令人難忘的印記。"
+  }
+};
+
+// State
+let current = 0;
+let scores = { woody:0, citrus:0, floral:0, musk:0 };
+const total = questions.length;
+let currentSelection = null;
+let preloadedImages = {}; 
+
+// Elements
+const intro = document.getElementById('intro');
+const startBtn = document.getElementById('startBtn');
+const quiz = document.getElementById('quiz');
+const questionTitle = document.getElementById('questionTitle');
+const answersDiv = document.getElementById('answers');
+const questionImage = document.getElementById('questionImage');
+const progressText = document.getElementById('progressText');
+const nextBtn = document.getElementById('nextBtn');
+const resultSection = document.getElementById('result');
+const resultSubtitle = document.querySelector('.result-subtitle');
+const resultTitle = document.getElementById('resultTitle');
+const resultImageContainer = document.querySelector('.result-image-container');
+const resultImage = document.getElementById('resultImage');
+const resultDesc = document.getElementById('resultDesc');
+const resultHashtags = document.getElementById('resultHashtags');
+const restartBtn = document.getElementById('restartBtn');
+const shareBtn = document.getElementById('shareBtn');
+const resultElements = [
+  resultSubtitle,
+  resultTitle,
+  resultImageContainer,
+  resultHashtags,
+  resultDesc,
+  restartBtn,
+  shareBtn
+];
+
+// Intro Page Elements
+const logo = document.querySelector('.site-header .logo');
+const introTitleLeft = document.querySelector('.intro-title-left');
+const introTitleRight = document.querySelector('.intro-title-right');
+const introTextWrapper = document.querySelector('.intro-text-wrapper');
+
+// Utility Functions
+function typeText(element, text, speed = 50, callback) {
+  element.innerHTML = ''; 
+  element.classList.add('typewriter-effect'); 
+  let i = 0;
+  function typing() {
+    if (i < text.length) {
+      if (text.charAt(i) === '<') {
+        let tagEnd = text.indexOf('>', i);
+        element.innerHTML += text.substring(i, tagEnd + 1);
+        i = tagEnd + 1;
+      } else {
+        element.innerHTML += text.charAt(i);
+        i++;
+      }
+      setTimeout(typing, speed);
+    } else {
+      element.classList.remove('typewriter-effect');
+      if (callback) callback();
+    }
+  }
+  typing();
+}
+
+/**
+ * 圖片預載函式
+ */
+function preloadImages() {
+  const imagePromises = Object.values(results).map(result => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = result.image;
+      img.onload = () => {
+        preloadedImages[result.image] = img;
+        resolve();
+      };
+      img.onerror = reject;
+    });
+  });
+  return Promise.all(imagePromises);
+}
+
+// Function to handle the intro page animation sequence
+async function animateIntroPage() {
+  logo.style.animation = 'fadeInUp 2s forwards';
+  startBtn.disabled = true;
+  await preloadImages();
+  
+  setTimeout(() => {
+    introTitleLeft.style.opacity = '1';
+    typeText(introTitleLeft, '測一測', 100, () => {
+      introTitleRight.style.opacity = '1';
+      typeText(introTitleRight, '屬於你的風格香', 100, () => {
+        introTextWrapper.style.animation = 'fadeIn 2s forwards';
+        setTimeout(() => {
+          startBtn.style.animation = 'fadeInUp 2s forwards';
+          startBtn.disabled = false;
+        }, 1500);
+      });
+    });
+  }, 1500);
+}
+
+// Function to animate the quiz question title
+function animateQuizQuestion(text) {
+  typeText(questionTitle, text);
+}
+
+// 分段動畫函式
+function animateResultPage(resultData) {
+  resultSubtitle.textContent = "你的風格香是";
+  resultTitle.textContent = resultData.title;
+  resultImage.src = preloadedImages[resultData.image].src;
+  resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
+  
+  // 直接設定內容，移除打字機效果
+  const combinedText = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
+  resultDesc.innerHTML = combinedText;
+  
+  // 移除 .typewriter-effect class，避免游標閃爍
+  resultDesc.classList.remove('typewriter-effect');
+  
+  let delay = 0;
+  [resultSubtitle, resultTitle, resultImageContainer, resultHashtags, resultDesc].forEach(element => {
+    setTimeout(() => {
+      element.style.animation = 'fadeInUp 1s forwards';
+    }, delay);
+    delay += 200;
+  });
+  
+  setTimeout(() => {
+    restartBtn.style.animation = 'fadeInUp 1s forwards';
+    shareBtn.style.animation = 'fadeInUp 1s forwards';
+  }, delay + 500);
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', animateIntroPage);
+
+startBtn.addEventListener('click', () => {
+  intro.classList.add('hidden');
+  quiz.classList.remove('hidden');
+  current = 0;
+  scores = { woody:0, citrus:0, floral:0, musk:0 };
+  renderQuestion();
+});
+
+function renderQuestion() {
+  const q = questions[current];
+  questionImage.src = q.image;
+  progressText.textContent = `第 ${current + 1} 題 / ${total} 題`;
+  answersDiv.innerHTML = '';
+  currentSelection = null;
+  
+  q.answers.forEach((a) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = a.text;
+    btn.dataset.type = a.type;
+    btn.addEventListener('click', () => selectAnswer(btn));
+    answersDiv.appendChild(btn);
+  });
+  nextBtn.style.display = 'none';
+  
+  animateQuizQuestion(q.question);
+}
+
+function selectAnswer(selectedBtn) {
+  const selectedType = selectedBtn.dataset.type;
+  
+  answersDiv.querySelectorAll('button').forEach(b => {
+    b.classList.remove('selected');
+  });
+  
+  selectedBtn.classList.add('selected');
+  currentSelection = selectedType;
+  
+  if (currentSelection) {
+    nextBtn.style.display = 'inline-block';
+  }
+}
+
+nextBtn.addEventListener('click', () => {
+  if (currentSelection) {
+    scores[currentSelection]++;
+    current++;
+    if (current < total) {
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+});
+
+function showResult() {
+  quiz.classList.add('hidden');
+  resultSection.classList.remove('hidden');
+  
+  let highest = 'woody';
+  let max = -1;
+  for (const k in scores) {
+    if (scores.hasOwnProperty(k) && scores[k] > max) {
+      max = scores[k];
+      highest = k;
+    }
+  }
+  const r = results[highest];
+  animateResultPage(r);
+}
+
+restartBtn.addEventListener('click', () => {
+  resultSection.classList.add('hidden');
+  intro.classList.remove('hidden');
+  
+  resultElements.forEach(element => {
+    element.style.animation = 'none';
+    element.style.opacity = '0';
+  });
+  
+  logo.style.animation = 'none';
+  introTitleLeft.textContent = '';
+  introTitleRight.textContent = '';
+  introTextWrapper.style.animation = 'none';
+  startBtn.style.animation = 'none';
+  
+  logo.style.animation = '';
+  introTitleLeft.style.opacity = '0';
+  introTitleRight.style.opacity = '0';
+  introTextWrapper.style.opacity = '0';
+  startBtn.style.opacity = '0';
+  
+  animateIntroPage();
+});
+
+shareBtn.addEventListener('click', () => {
+  const highest = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+  const resultText = results[highest].title;
+  const shareText = `我的香氣人格是【${resultText}】！快來測測看你是哪一種吧！\n${window.location.href}`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: '香氣人格測驗',
+      text: shareText,
+      url: window.location.href
+    }).catch((error) => console.log('分享失敗', error));
+  } else {
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert('結果已複製到剪貼簿，可以去貼給朋友囉！');
+    }).catch((err) => {
+      console.error('無法複製到剪貼簿', err);
+    });
+  }
+});
