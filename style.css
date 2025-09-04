@@ -16,7 +16,7 @@ html,
 body {
   height: 100%;
   margin: 0;
-  font-family: "ZCOOL KuaiLe", "Noto Serif TC", "BiauKai", "DFKai-SB", "KaiTi", sans-serif;
+  font-family: "Noto Serif TC", "BiauKai", "ZCOOL KuaiLe", "DFKai-SB", "KaiTi", sans-serif;ZCOOL KuaiLe
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   background: linear-gradient(135deg, var(--bg), #ece0d1);
