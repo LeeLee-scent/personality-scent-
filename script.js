@@ -1,4 +1,4 @@
-// script.js - 香氣人格測驗 (終極優化版)
+// script.js - 香氣人格測驗 (無打字機效果版)
 const questions = [
   {
     question: "Q1. 清晨起床的你，最需要什麼來開啟新的一天？",
@@ -73,7 +73,6 @@ const results = {
   citrus: {
     title: "柑橘清新型",
     image: "images/result_citrus.jpg",
-    // 這裡我已移除多餘的 #，現在應能正確顯示
     hashtags: ["#熱情開朗", "#樂觀正向", "#自由灑脫"],
     description: "你充滿熱情與活力，天生是個樂觀主義者，就像初晨的陽光，明亮而溫暖。你不喜歡被束縛，樂於探索新事物和未知領域，對生活中的每一刻都抱持著好奇心與冒險精神。在社交場合，你是自然而然的氣氛製造者，總是能用你的正能量感染身邊的人。你享受在動態中找尋自我，相信每一次的嘗試都是一場值得的冒險。",
     analysis: "你的選擇反映出你外向、喜愛社交的靈魂。你傾向於輕盈、明亮的選項，因為它們能激發你的熱情與創造力。柑橘調，例如<strong>葡萄柚</strong>、<strong>檸檬</strong>、<strong>佛手柑</strong>，能完美地與你的個性契合。它們清新、明快的氣息，能讓你隨時保持清醒，精神煥發，讓你的每一天都充滿積極活力的氣息。"
@@ -136,29 +135,6 @@ const introTitleRight = document.querySelector('.intro-title-right');
 const introTextWrapper = document.querySelector('.intro-text-wrapper');
 
 // Utility Functions
-function typeText(element, text, speed = 50, callback) {
-  element.innerHTML = ''; 
-  element.classList.add('typewriter-effect'); 
-  let i = 0;
-  function typing() {
-    if (i < text.length) {
-      if (text.charAt(i) === '<') {
-        let tagEnd = text.indexOf('>', i);
-        element.innerHTML += text.substring(i, tagEnd + 1);
-        i = tagEnd + 1;
-      } else {
-        element.innerHTML += text.charAt(i);
-        i++;
-      }
-      setTimeout(typing, speed);
-    } else {
-      element.classList.remove('typewriter-effect');
-      if (callback) callback();
-    }
-  }
-  typing();
-}
-
 /**
  * 圖片預載函式
  */
@@ -174,7 +150,6 @@ function preloadImages() {
       img.onerror = reject;
     });
   });
-
   return Promise.all(imagePromises);
 }
 
@@ -182,21 +157,18 @@ function preloadImages() {
 async function animateIntroPage() {
   logo.style.animation = 'fadeInUp 2s forwards';
   startBtn.disabled = true;
-
   await preloadImages();
   
   setTimeout(() => {
     introTitleLeft.style.opacity = '1';
-    typeText(introTitleLeft, '測一測', 100, () => {
-      introTitleRight.style.opacity = '1';
-      typeText(introTitleRight, '屬於你的風格香', 100, () => {
-        introTextWrapper.style.animation = 'fadeIn 2s forwards';
-        setTimeout(() => {
-          startBtn.style.animation = 'fadeInUp 2s forwards';
-          startBtn.disabled = false;
-        }, 1500);
-      });
-    });
+    introTitleLeft.textContent = '測一測'; // 直接設定文字
+    introTitleRight.style.opacity = '1';
+    introTitleRight.textContent = '屬於你的風格香'; // 直接設定文字
+    introTextWrapper.style.animation = 'fadeIn 2s forwards';
+    setTimeout(() => {
+      startBtn.style.animation = 'fadeInUp 2s forwards';
+      startBtn.disabled = false;
+    }, 1500);
   }, 1500);
 }
 
@@ -212,11 +184,12 @@ function animateResultPage(resultData) {
   resultImage.src = preloadedImages[resultData.image].src;
   resultHashtags.innerHTML = resultData.hashtags.map(tag => `<div class="result-hashtag">${tag}</div>`).join('');
   
+  // 直接設定內容，移除打字機效果
   const combinedText = `<p>${resultData.description}</p><div class="result-separator"></div><p>${resultData.analysis}</p>`;
-  typeText(resultDesc, combinedText, 25);
+  resultDesc.innerHTML = combinedText;
   
   let delay = 0;
-  [resultSubtitle, resultTitle, resultImageContainer, resultHashtags].forEach(element => {
+  [resultSubtitle, resultTitle, resultImageContainer, resultHashtags, resultDesc].forEach(element => {
     setTimeout(() => {
       element.style.animation = 'fadeInUp 1s forwards';
     }, delay);
@@ -237,112 +210,3 @@ startBtn.addEventListener('click', () => {
   quiz.classList.remove('hidden');
   current = 0;
   scores = { woody:0, citrus:0, floral:0, musk:0 };
-  renderQuestion();
-});
-
-function renderQuestion() {
-  const q = questions[current];
-  questionImage.src = q.image;
-  progressText.textContent = `第 ${current + 1} 題 / ${total} 題`;
-  answersDiv.innerHTML = '';
-  currentSelection = null;
-  
-  q.answers.forEach((a) => {
-    const btn = document.createElement('button');
-    btn.className = 'answer-btn';
-    btn.textContent = a.text;
-    btn.dataset.type = a.type;
-    btn.addEventListener('click', () => selectAnswer(btn));
-    answersDiv.appendChild(btn);
-  });
-  nextBtn.style.display = 'none';
-  
-  animateQuizQuestion(q.question);
-}
-
-function selectAnswer(selectedBtn) {
-  const selectedType = selectedBtn.dataset.type;
-  
-  answersDiv.querySelectorAll('button').forEach(b => {
-    b.classList.remove('selected');
-  });
-  
-  selectedBtn.classList.add('selected');
-  currentSelection = selectedType;
-  
-  if (currentSelection) {
-    nextBtn.style.display = 'inline-block';
-  }
-}
-
-nextBtn.addEventListener('click', () => {
-  if (currentSelection) {
-    scores[currentSelection]++;
-    current++;
-    if (current < total) {
-      renderQuestion();
-    } else {
-      showResult();
-    }
-  }
-});
-
-function showResult() {
-  quiz.classList.add('hidden');
-  resultSection.classList.remove('hidden');
-  
-  let highest = 'woody';
-  let max = -1;
-  for (const k in scores) {
-    if (scores.hasOwnProperty(k) && scores[k] > max) {
-      max = scores[k];
-      highest = k;
-    }
-  }
-  const r = results[highest];
-  animateResultPage(r);
-}
-
-restartBtn.addEventListener('click', () => {
-  resultSection.classList.add('hidden');
-  intro.classList.remove('hidden');
-  
-  resultElements.forEach(element => {
-    element.style.animation = 'none';
-    element.style.opacity = '0';
-  });
-  
-  logo.style.animation = 'none';
-  introTitleLeft.textContent = '';
-  introTitleRight.textContent = '';
-  introTextWrapper.style.animation = 'none';
-  startBtn.style.animation = 'none';
-  
-  logo.style.animation = '';
-  introTitleLeft.style.opacity = '0';
-  introTitleRight.style.opacity = '0';
-  introTextWrapper.style.opacity = '0';
-  startBtn.style.opacity = '0';
-  
-  animateIntroPage();
-});
-
-shareBtn.addEventListener('click', () => {
-  const highest = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-  const resultText = results[highest].title;
-  const shareText = `我的香氣人格是【${resultText}】！快來測測看你是哪一種吧！\n${window.location.href}`;
-  
-  if (navigator.share) {
-    navigator.share({
-      title: '香氣人格測驗',
-      text: shareText,
-      url: window.location.href
-    }).catch((error) => console.log('分享失敗', error));
-  } else {
-    navigator.clipboard.writeText(shareText).then(() => {
-      alert('結果已複製到剪貼簿，可以去貼給朋友囉！');
-    }).catch((err) => {
-      console.error('無法複製到剪貼簿', err);
-    });
-  }
-});
