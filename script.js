@@ -1,63 +1,63 @@
 // script.js - 香氣人格測驗 (最終版)
 const questions = [
-  {
+    {
     question: "Q1. 清晨起床的你，最需要什麼來開啟新的一天？",
     image: "images/q1.jpg",
     answers: [
-      {text: "A.一杯剛沖好的黑咖啡，喚醒思緒", type: "woody"},
-      {text: "B.一場晨間瑜伽或暖身運動，激發能量", type: "citrus"},
-      {text: "C.溫熱的水澡與音樂，緩緩開展", type: "floral"},
-      {text: "D.打開窗簾，陽光與植物香迎接你", type: "musk"}
+      {text: "A. 在安靜中，先讓自己清醒，再開始思考。", type: "woody"},
+      {text: "B. 一場晨間瑜伽或暖身運動，激發能量。", type: "citrus"},
+      {text: "C. 在溫暖舒適的環境中，讓心情被溫柔地撫慰。", type: "floral"},
+      {text: "D. 與陽光或大自然連結，讓身心充滿平靜感。", type: "musk"}
     ]
   },
   {
     question: "Q2. 在不經意的空氣中，你最難忘的是哪種氣味記憶？",
     image: "images/q2.jpg",
     answers: [
-      {text: "A.熱帶果香與汗水交織的旅行午後", type: "citrus"},
-      {text: "B.雨後濕潤的森林氣息", type: "woody"},
-      {text: "C.恰到好處的白玫瑰香水味", type: "floral"},
-      {text: "D.甜點店飄出的奶油與焦糖香", type: "musk"}
+      {text: "A. 熱帶果香與汗水交織的旅行午後", type: "citrus"},
+      {text: "B. 雨後濕潤的森林氣息", type: "woody"},
+      {text: "C. 恰到好處的白玫瑰香水味", type: "floral"},
+      {text: "D. 甜點店飄出的奶油與焦糖香", type: "musk"}
     ]
   },
   {
-    question: "Q3. 朋友們最常形容你的特質是？",
+    question: "Q3. 當朋友遇到困難時，你通常會怎麼做？",
     image: "images/q3.jpg",
     answers: [
-      {text: "A.安定可靠，像棵老樹般給人依靠", type: "woody"},
-      {text: "B.活潑有趣，總是能炒熱氣氛", type: "citrus"},
-      {text: "C.靜靜聆聽，像月亮陪伴在側", type: "floral"},
-      {text: "D.細膩感性，總能說中別人心事", type: "musk"}
+      {text: "A. 默默地聽完他們說，然後給出實際的建議。", type: "woody"},
+      {text: "B. 帶他們出去玩，讓他們暫時忘記煩惱。", type: "citrus"},
+      {text: "C. 陪在他們身邊，給予溫暖的擁抱和安慰。", type: "floral"},
+      {text: "D. 先讓他們自己冷靜，等他們準備好再找你。", type: "musk"}
     ]
   },
   {
-    question: "Q4. 你最想要自己的氣味是⋯⋯",
+    question: "Q4. 如果要挑一個地方獨自靜心，你會選擇？",
     image: "images/q4.jpg",
     answers: [
-      {text: "A.一種讓人安心、沉靜的香味", type: "woody"},
-      {text: "B.像走進綠色植物園的清新氣息", type: "citrus"},
-      {text: "C.令人一靠近就覺得療癒的甜味", type: "floral"},
-      {text: "D.淡淡又若有似無的高級氣場", type: "musk"}
+      {text: "A. 一個能看到群山與樹海的景觀咖啡廳。", type: "woody"},
+      {text: "B. 一個充滿陽光的私人露台，能聞到新鮮花草的氣味。", type: "citrus"},
+      {text: "C. 一間溫暖舒適、有壁爐的舊圖書館。", type: "floral"},
+      {text: "D. 一間極簡風格的設計師公寓，能靜靜思考。", type: "musk"}
     ]
   },
   {
-    question: "Q5. 如果週末只有一天獨處時光，你會選擇？",
+    question: "Q5. 如果週末只剩一天的自由時間，你會選擇？",
     image: "images/q5.jpg",
     answers: [
-      {text: "A.去書店泡一整個下午", type: "woody"},
-      {text: "B.一個人衝去山裡或海邊放風", type: "citrus"},
-      {text: "C.躲在家點香氛蠟燭耍廢", type: "floral"},
-      {text: "D.和熟悉朋友小酌聚聚聊心事", type: "musk"}
+      {text: "A. 享受一場靜謐的藝文之旅，如參觀畫廊或博物館。", type: "woody"},
+      {text: "B. 約上三五好友去戶外，嘗試一項充滿挑戰性的新運動。", type: "citrus"},
+      {text: "C. 在家為朋友準備一頓豐盛的晚餐，享受相處的溫馨時光。", type: "floral"},
+      {text: "D. 找間舒適的咖啡廳，帶上耳機、專注地閱讀或工作。", type: "musk"}
     ]
   },
   {
-    question: "Q6. 如果你是一支香氣，你希望別人怎麼記住你？",
+    question: "Q6. 你認為最能代表「高級感」的是什麼？",
     image: "images/q6.jpg",
     answers: [
-      {text: "A.神秘、有層次，會越聞越著迷", type: "woody"},
-      {text: "B.溫柔、舒服，像一段美好記憶", type: "floral"},
-      {text: "C.明亮、開朗，讓人瞬間提起精神", type: "citrus"},
-      {text: "D.乾淨、俐落，簡單卻令人難忘", type: "musk"}
+      {text: "A. 一件能夠穿很久、質感很好的喀什米爾毛衣。", type: "woody"},
+      {text: "B. 簡單俐落的設計，但細節藏著巧思。", type: "citrus"},
+      {text: "C. 柔軟的絲綢或精緻的蕾絲，帶給身體美好的觸感。", type: "floral"},
+      {text: "D. 一個乾淨且沒有多餘裝飾的空間。", type: "musk"}
     ]
   }
 ];
